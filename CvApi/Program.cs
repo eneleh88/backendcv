@@ -13,6 +13,17 @@ var connectionString = builder.Configuration.GetConnectionString("CVSource");
 builder.Services.AddDbContext<CvProjectContext>(options =>
     options.UseNpgsql(connectionString));
 
+//CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
@@ -21,6 +32,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("AllowSpecificOrigin");
 }
 
 app.UseHttpsRedirection();
